@@ -4,7 +4,6 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-
 //we are going to use session variables so we need to enable sessions
 session_start();
 
@@ -35,61 +34,57 @@ $drinks = [
     ['name' => 'Ice-tea', 'price' => 3],
 ];
 
+//set pages for displaying food or drinks
 $products = $food;
-if (isset($_GET['food'])) {
+if ($_GET['food'] === '0') {
     $products = $drinks;
 }
 
-$totalValue = 0;
-
-/* Store form values in session var */
+//Store form values in SESSION
 $errorMsg = '';
 $errors = [];
-$fields = [];
 if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
+    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'Enter valid email';
+    }
     foreach($_POST as $field => $value) {
-        if (empty($field)) {
-            $errors['$field'] = 'Fill out '.$field.'<br>';
-            $errorMsg = $errors['$field'];
-        } else {
-            if (!is_string($value)) {
-                $_SESSION['fields']['field'] = $value;
-            } else {
-                $_SESSION['fields']['field'] = testInput($value);
-            }
-
+        if (empty($_POST[$field])) {
+            $errors[$field] = 'Fill out '.$field;
+        } else if ($field !== 'products' && $field !== 'express') {
+            $value = trim(htmlspecialchars($value));
+            $_SESSION[$field] = $value;
         }
     }
 }
-// input testing trim (whitespace, tabs), strip lashes and html tags
-function testInput($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-/* Function used in html - provides previous value or empty string */
-function fieldvalue($field = false)
-{
-    return ($field && !empty($field) && isset($_SESSION['formfields']) && array_key_exists($field, $_SESSION['formfields'])) ? $_SESSION['formfields'][$field] : '';
+
+//calculate delivery time
+$stamp = 0;
+$now = new DateTime();
+if (isset($_POST['express'])) {
+    $now->add(new DateInterval('PT45M'));
+    $stamp = $now->format('H:i d-m-Y');
+} else {
+    $now->add(new DateInterval('PT120M'));
+    $stamp = $now->format('H:i d-m-Y');
 }
 
-    //calculate delivery time
-    $now = new DateTime();
-    if (isset($_POST['express-delivery'])) {
-        $now->add(new DateInterval('PT45M'));
-        $stamp = $now->format('Y-m-d H:i');
-    } else {
-        $now->add(new DateInterval('PT120M'));
-        $stamp = $now->format('Y-m-d H:i');
+//calculate price of order
+$totalValue = 0;
+if (isset($_POST['products'])) {
+    var_dump($_POST['products']);
+    $orderIndexes = array_intersect_key(array_keys($_POST['products']), array_keys($products));
+
+    foreach ($_POST['products'] as $i => $product) {
+
+            $totalValue += (float)$product['price'];
+            var_dump($totalValue);
+        }
     }
+    if (!empty($_POST['express'])) {
+        $totalValue += (float)$_POST['express'];
+    }
+    var_dump($totalValue);
 
-
-
-
-
-
-//validate input data
 
 whatIsHappening();
 
