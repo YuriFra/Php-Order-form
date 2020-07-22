@@ -40,7 +40,7 @@ if (isset($_GET['food']) && (int)$_GET['food'] === 0) {
     $products = $drinks;
 }
 
-//Store form values in SESSION
+//store valid form values in SESSION
 $errors = [];
 if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
@@ -77,22 +77,18 @@ if (isset($_POST['products'])) {
 if (!empty($_POST['express'])) {
     $orderValue += (float)$_POST['express'];
 }
-//calculate total of orders, store in COOKIE
+
+//calculate total price of orders, store in COOKIE
 $totalValue = 0;
 $cookie_name = 'orders';
 $cookie_value = $totalValue;
-$totalValue = $_COOKIE['orders']; // get current value of cookie and add it to variable
-$totalValue += $orderValue; //append new value to variable
-setcookie($cookie_name, (string)$totalValue, time() + (86400 * 30), "/"); // cookie expires after 1 month
-
-//check if cookie is set and value
-if(!isset($_COOKIE[$cookie_name])) {
-    var_dump("Cookie named '" . $cookie_name . "' is not set!");
-} else {
-    var_dump("Cookie '" . $cookie_name . "' is set!<br>Value is: " . $totalValue);
+if (isset($_COOKIE['orders'])) {
+    $totalValue = $_COOKIE['orders'];
+    $totalValue += $orderValue;
 }
-
+setcookie($cookie_name, (string)$totalValue, time() + (86400 * 30), "/");  //cookie expires after 1 month
 
 whatIsHappening();
 
 require 'form-view.php';
+require 'mail.php';
