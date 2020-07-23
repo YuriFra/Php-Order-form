@@ -36,6 +36,7 @@ $drinks = [
 
 //set pages for displaying food or drinks
 $products = $food;
+
 if (isset($_GET['drinks'])) {
     $products = $drinks;
 }
@@ -89,12 +90,14 @@ if (isset($_COOKIE['orders'])) {
     $totalValue = $_COOKIE['orders'];
     $totalValue += $orderValue;
 }
-setcookie($cookie_name, (string)$totalValue, time() + (60), "/");  //cookie expires after 1 month (86400 * 30)
+setcookie($cookie_name, (string)$totalValue, time() + (86400 * 30), "/");  //cookie expires after 1 month
 
+/*
+//delete cookie
 if (isset($_COOKIE['orders'])) {
     unset($_COOKIE['orders']);
     setcookie('orders', '', time() - 3600, '/'); // empty value and old timestamp
-}
+}*/
 
 $fullForm = !empty($_SESSION['email']) & !empty($_SESSION['street']) & !empty($_SESSION['streetnumber']) & !empty($_SESSION['city']) & !empty($_SESSION['zipcode']) & isset($_POST['products']);
 
