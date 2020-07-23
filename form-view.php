@@ -17,10 +17,13 @@
     <nav>
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link active" href="?food=1">Order food</a>
+                <a class="nav-link active" href="/">Order food</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="?food=0">Order drinks</a>
+                <a class="nav-link" href="?drinks">Order drinks</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?both">Order food & drinks</a>
             </li>
         </ul>
     </nav>
@@ -32,12 +35,13 @@
             echo '<div class="alert alert-danger">'.$errors[$errorMsg].'</div>';
             } ?>
             <!-- confirm order message -->
-            <?php if (isset($_POST['products'])) echo '<div class="alert alert-primary text-center my-3" role="alert">Your order is confirmed.<br>Total price: <strong>&euro; '.$orderValue.'</strong><br>Expected delivery time: <strong>'.$deliTime.'</strong></div>' ?>
+            <?php if ($fullForm) {
+                echo '<div class="alert alert-primary text-center my-3" role="alert">Your order is confirmed.<br>Total price: <strong>&euro; ' . $orderValue . '</strong><br>Expected delivery time: <strong>' . $deliTime . '</strong></div>'; } ?>
             <!-- email -->.
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="email">E-mail <span class="text-danger">*</span></label>
-                    <input type="email" id="email" name="email" value="<?php echo (isset($_SESSION['email'])) ? $_SESSION['email'] : '' ?>" class="form-control">
+                    <input type="text" id="email" name="email" value="<?php echo $_SESSION['email'] ?? '' ?>" class="form-control">
                 </div>
             </div>
             <!-- Address -->
@@ -46,22 +50,22 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="street">Street <span class="text-danger">*</span></label>
-                        <input type="text" name="street" value="<?php echo (isset($_SESSION['street'])) ? $_SESSION['street'] : '' ?>" id="street" class="form-control">
+                        <input type="text" name="street" value="<?php echo $_SESSION['street'] ?? '' ?>" id="street" class="form-control">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="streetnumber">Street number <span class="text-danger">*</span></label>
-                        <input type="number" id="streetnumber" name="streetnumber" value="<?php echo (isset($_SESSION['streetnumber'])) ? $_SESSION['streetnumber'] : '' ?>" class="form-control">
+                        <input type="number" id="streetnumber" name="streetnumber" value="<?php echo $_SESSION['streetnumber'] ?? '' ?>" class="form-control">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="city">City <span class="text-danger">*</span></label>
-                        <input type="text" id="city" name="city" value="<?php echo (isset($_SESSION['city'])) ? $_SESSION['city'] : '' ?>" class="form-control">
+                        <input type="text" id="city" name="city" value="<?php echo $_SESSION['city'] ?? '' ?>" class="form-control">
                     </div>
                     <br>
                     <div class="form-group col-md-6">
                         <label for="zipcode">Zipcode <span class="text-danger">*</span></label>
-                        <input type="number" id="zipcode" name="zipcode" value="<?php echo (isset($_SESSION['zipcode'])) ? $_SESSION['zipcode'] : '' ?>" class="form-control">
+                        <input type="number" id="zipcode" name="zipcode" value="<?php echo $_SESSION['zipcode'] ?? '' ?>" class="form-control">
                     </div>
                 </div>
             </fieldset>

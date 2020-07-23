@@ -36,17 +36,21 @@ $drinks = [
 
 //set pages for displaying food or drinks
 $products = $food;
-if (isset($_GET['food']) && (int)$_GET['food'] === 0) {
+if (isset($_GET['drinks'])) {
     $products = $drinks;
+}
+if (isset($_GET['both'])) {
+    $products = array_merge($food, $drinks);
 }
 
 //store valid form values in SESSION
 $errors = [];
 if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
-    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = 'Enter valid email';
-    }
     foreach($_POST as $field => $value) {
+        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Enter valid email';
+            $_POST['email'] = '';
+        }
         if (empty($_POST[$field])) {
             $errors[$field] = 'Fill out '.$field;
         } else if ($field !== 'products' && $field !== 'express') {
@@ -61,11 +65,10 @@ $deliTime = 0;
 $now = new DateTime();
 if (isset($_POST['express'])) {
     $now->add(new DateInterval('PT45M'));
-    $deliTime = $now->format('H:i d-m-Y');
 } else {
     $now->add(new DateInterval('PT120M'));
-    $deliTime = $now->format('H:i d-m-Y');
 }
+$deliTime = $now->format('H:i d-m-Y');
 
 //calculate price of order
 $orderValue = 0;
@@ -86,9 +89,16 @@ if (isset($_COOKIE['orders'])) {
     $totalValue = $_COOKIE['orders'];
     $totalValue += $orderValue;
 }
-setcookie($cookie_name, (string)$totalValue, time() + (86400 * 30), "/");  //cookie expires after 1 month
+setcookie($cookie_name, (string)$totalValue, time() + (60), "/");  //cookie expires after 1 month (86400 * 30)
+
+if (isset($_COOKIE['orders'])) {
+    unset($_COOKIE['orders']);
+    setcookie('orders', '', time() - 3600, '/'); // empty value and old timestamp
+}
+
+$fullForm = !empty($_SESSION['email']) & !empty($_SESSION['street']) & !empty($_SESSION['streetnumber']) & !empty($_SESSION['city']) & !empty($_SESSION['zipcode']) & isset($_POST['products']);
 
 whatIsHappening();
 
 require 'form-view.php';
-require 'mail.php';
+//require 'mail.php';
