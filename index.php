@@ -92,16 +92,24 @@ if (isset($_COOKIE['orders'])) {
 }
 setcookie($cookie_name, (string)$totalValue, time() + (86400 * 30), "/");  //cookie expires after 1 month
 
-/*
-//delete cookie
-if (isset($_COOKIE['orders'])) {
-    unset($_COOKIE['orders']);
-    setcookie('orders', '', time() - 3600, '/'); // empty value and old timestamp
-}*/
-
 $fullForm = !empty($_SESSION['email']) & !empty($_SESSION['street']) & !empty($_SESSION['streetnumber']) & !empty($_SESSION['city']) & !empty($_SESSION['zipcode']) & isset($_POST['products']);
 
-whatIsHappening();
+//whatIsHappening();
+
+//send email when order is ok - using SendMail
+if ($fullForm) {
+    $sendTo = $_SESSION['email'];
+    //message in mail
+    $msg = "Your email: " . $_SESSION['email'] . "\n
+    Address:\\n" . $_SESSION['street'] . " " . $_SESSION['streetnumber'] . "\n
+    " . $_SESSION['zipcode'] . " " . $_SESSION['city'] . "\n
+    Your order will be delivered around " . $deliTime . "\n
+    Total price = " . $orderValue . "&euro;";
+
+    $send = mail($sendTo,"Order confirmed", $msg);
+}
 
 require 'form-view.php';
+
+//variant - send mail with PHPMailer
 //require 'mail.php';

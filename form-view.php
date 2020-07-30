@@ -36,12 +36,12 @@
             } ?>
             <!-- confirm order message -->
             <?php if ($fullForm) {
-                echo '<div class="alert alert-primary text-center my-3" role="alert">Your order is confirmed.<br>Total price: <strong>&euro; ' . $orderValue . '</strong><br>Expected delivery time: <strong>' . $deliTime . '</strong></div>'; } ?>
+                echo '<div class="alert alert-primary text-center my-3" role="alert">Your order is confirmed.<br>Total price: <strong>&euro; ' . $orderValue . '</strong><br>Expected delivery time: <strong>' . $deliTime . '</strong><br>A confirmation email was sent.</div>'; } ?>
             <!-- email -->.
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="email">E-mail <span class="text-danger">*</span></label>
-                    <input type="text" id="email" name="email" value="<?php echo $_SESSION['email'] ?? '' ?>" class="form-control">
+                    <input type="text" id="email" name="email" value="<?= $_SESSION['email'] ?? '' ?>" class="form-control">
                 </div>
             </div>
             <!-- Address -->
@@ -50,7 +50,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="street">Street <span class="text-danger">*</span></label>
-                        <input type="text" name="street" value="<?php echo $_SESSION['street'] ?? '' ?>" id="street" class="form-control">
+                        <input type="text" name="street" value="<?= $_SESSION['street'] ?? '' ?>" id="street" class="form-control">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="streetnumber">Street number <span class="text-danger">*</span></label>
@@ -60,12 +60,12 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="city">City <span class="text-danger">*</span></label>
-                        <input type="text" id="city" name="city" value="<?php echo $_SESSION['city'] ?? '' ?>" class="form-control">
+                        <input type="text" id="city" name="city" value="<?= $_SESSION['city'] ?? '' ?>" class="form-control">
                     </div>
                     <br>
                     <div class="form-group col-md-6">
                         <label for="zipcode">Zipcode <span class="text-danger">*</span></label>
-                        <input type="number" id="zipcode" name="zipcode" value="<?php echo $_SESSION['zipcode'] ?? '' ?>" class="form-control">
+                        <input type="number" id="zipcode" name="zipcode" value="<?= $_SESSION['zipcode'] ?? '' ?>" class="form-control">
                     </div>
                 </div>
             </fieldset>
@@ -78,9 +78,9 @@
                 } ?>
                 <?php foreach ($products as $i => $product): ?>
                     <label>
-                        <input type="checkbox" value="<?php echo number_format($product['price'], 2) ?>"
-                               name="products[<?php echo $i ?>]"> <?php echo $product['name'] ?> -
-                        &euro; <?php echo number_format($product['price'], 2) ?>
+                        <input type="checkbox" value="<?= number_format($product['price'], 2) ?>"
+                               name="products[<?php echo $i ?>]"> <?= $product['name'] ?> -
+                        &euro; <?= number_format($product['price'], 2) ?>
                     </label><br/>
                 <?php endforeach; ?>
             </fieldset>
